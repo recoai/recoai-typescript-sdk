@@ -1,6 +1,6 @@
 // To parse this data:
 //
-//   import { Convert, AddToCart, AddToList, APISettings, BuilderFn1, BuilderFn2, BuilderVariable, CategoryPageView, ChangeItemStockState, CheckoutStart, DetailItemView, HomePageView, ImageInteraction, ItemAttributesSelection, ItemRemove, ItemsImpression, ItemsView, ItemUpsert, ListView, OfflineRecommendationsRemove, OfflineRecommendationsUpsert, OtherInteraction, PageVisit, PlacementRemove, PlacementStatisticsJSONReady, PlacementUpsert, PurchaseComplete, RateItem, RecoACK, RecoRequest, RecoShow, RemoveFromCart, RemoveFromList, SearchItems, CartPageView, SmartSearchRequest, SmartSearchShow, SortItems, StrategyParametersTypes, UnknownEvent, VideoInteraction } from "./file";
+//   import { Convert, AddToCart, AddToList, APISettings, BuilderFn1, BuilderFn2, BuilderVariable, ChangeItemStockState, CheckoutStart, DetailItemView, HomePageView, ImageInteraction, ItemAttributesSelection, ItemRemove, ItemsView, ItemUpsert, ListView, OfflineRecommendationsRemove, OfflineRecommendationsUpsert, OtherInteraction, PageVisit, PlacementRemove, PlacementStatisticsJSONReady, PlacementUpsert, PurchaseComplete, RateItem, RecoACK, RecoRequest, RecoShow, RemoveFromCart, RemoveFromList, SearchItems, CartPageView, SmartSearchRequest, SmartSearchShow, SortItems, StrategyParametersTypes, UnknownEvent, VideoInteraction } from "./file";
 //
 //   const addToCart = Convert.toAddToCart(json);
 //   const addToList = Convert.toAddToList(json);
@@ -8,7 +8,6 @@
 //   const builderFn1 = Convert.toBuilderFn1(json);
 //   const builderFn2 = Convert.toBuilderFn2(json);
 //   const builderVariable = Convert.toBuilderVariable(json);
-//   const categoryPageView = Convert.toCategoryPageView(json);
 //   const changeItemStockState = Convert.toChangeItemStockState(json);
 //   const checkoutStart = Convert.toCheckoutStart(json);
 //   const common = Convert.toCommon(json);
@@ -17,7 +16,6 @@
 //   const imageInteraction = Convert.toImageInteraction(json);
 //   const itemAttributesSelection = Convert.toItemAttributesSelection(json);
 //   const itemRemove = Convert.toItemRemove(json);
-//   const itemsImpression = Convert.toItemsImpression(json);
 //   const itemsView = Convert.toItemsView(json);
 //   const itemUpsert = Convert.toItemUpsert(json);
 //   const listView = Convert.toListView(json);
@@ -99,8 +97,7 @@ export enum EventType {
 
 export interface ItemDetails {
     attributes?: null | Attributes;
-    item_id:     string;
-    item_type:   ItemType;
+    item:        Item;
 }
 
 /**
@@ -108,17 +105,18 @@ export interface ItemDetails {
  * component list.
  */
 export interface Attributes {
-    article?:     null | Article;
-    categories?:  null | Categories;
-    costs?:       null | Costs;
-    description?: null | Description;
-    ecommerce?:   null | ItemEcommerceSpec;
-    images?:      null | Images;
-    price?:       null | ExactPrice;
-    stock?:       null | Stock;
-    tags?:        null | Tags;
-    url:          ItemURL;
-    video?:       null | Video;
+    article?:       null | Article;
+    categories?:    null | Categories;
+    costs?:         null | Costs;
+    description?:   null | Description;
+    ecommerce?:     null | ItemEcommerceSpec;
+    images?:        null | Images;
+    price?:         null | ExactPrice;
+    related_items?: Item[] | null;
+    stock?:         null | Stock;
+    tags?:          null | Tags;
+    url:            ItemURL;
+    video?:         null | Video;
 }
 
 export interface Article {
@@ -334,6 +332,18 @@ export enum Currency {
     Zwl = "ZWL",
 }
 
+export interface Item {
+    item_id:   string;
+    item_type: ItemType;
+}
+
+export enum ItemType {
+    Article = "Article",
+    Ecommerce = "Ecommerce",
+    Unknown = "Unknown",
+    Video = "Video",
+}
+
 export interface Stock {
     available_quantity?: number | null;
     quantity?:           number | null;
@@ -360,13 +370,6 @@ export interface ItemURL {
 export interface Video {
     duration_secs: number;
     uri?:          null | string;
-}
-
-export enum ItemType {
-    Article = "Article",
-    Ecommerce = "Ecommerce",
-    Unknown = "Unknown",
-    Video = "Video",
 }
 
 export interface UserInfo {
@@ -445,16 +448,6 @@ export enum BuilderVariable {
     ItemsVisitedCounter = "ItemsVisitedCounter",
 }
 
-export interface CategoryPageView {
-    event_detail?:    null | EventDetail;
-    event_time?:      number | null;
-    event_type:       EventType;
-    items:            ItemDetails[];
-    on_screen:        boolean;
-    page_categories?: string[] | null;
-    user_info:        UserInfo;
-}
-
 export interface ChangeItemStockState {
     event_detail?: null | EventDetail;
     event_time?:   number | null;
@@ -462,11 +455,6 @@ export interface ChangeItemStockState {
     item:          Item;
     stock_state:   StockState;
     user_info:     UserInfo;
-}
-
-export interface Item {
-    item_id:   string;
-    item_type: ItemType;
 }
 
 export interface CheckoutStart {
@@ -616,16 +604,6 @@ export interface ItemRemove {
     user_info:     UserInfo;
 }
 
-export interface ItemsImpression {
-    event_detail?:    null | EventDetail;
-    event_time?:      number | null;
-    event_type:       EventType;
-    items:            ItemDetails[];
-    on_screen:        boolean;
-    page_categories?: string[] | null;
-    user_info:        UserInfo;
-}
-
 export interface ItemsView {
     event_detail?:    null | EventDetail;
     event_time?:      number | null;
@@ -710,7 +688,7 @@ export interface PlacementRemove {
  */
 export interface PlacementStatisticsJSONReady {
     loading_times_microseconds: { [key: string]: LIFOVecForUint128 };
-    placements_statistics:      { [key: string]: Array<Array<StrategyEnum | GenericStrategiesObject>> };
+    placements_statistics:      { [key: string]: Array<Array<StrategyEnum | DynamicStrategiesObject>> };
 }
 
 export interface LIFOVecForUint128 {
@@ -723,33 +701,81 @@ export enum StrategyEnum {
 }
 
 /**
+ * Parametrized strategies
+ *
  * Pre-defined strategies
  *
  * Build your custom strategies
- *
- * Similar description, image or other defined by you
  */
-export interface GenericStrategiesObject {
+export interface DynamicStrategiesObject {
+    Parametrized?:    ParametrizedStrategy;
     Generic?:         GenericStrategy;
     StrategyBuilder?: string;
-    Similarities?:    OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
     n_impressions?:   number;
     n_success?:       number;
 }
 
 export enum GenericStrategy {
-    AlsoAddedToCart = "AlsoAddedToCart",
-    AlsoPurchased = "AlsoPurchased",
-    AlsoSeen = "AlsoSeen",
     BestsellerCategory = "BestsellerCategory",
-    BestsellerGlobal = "BestsellerGlobal",
-    ContentMatching = "ContentMatching",
-    MostPurchases = "MostPurchases",
-    MostViews = "MostViews",
     SearchMatching = "SearchMatching",
-    SeenInSession = "SeenInSession",
     SeenInSessionCoccurAddedToCart = "SeenInSessionCoccurAddedToCart",
     SeenInSessionCoccurSeen = "SeenInSessionCoccurSeen",
+}
+
+/**
+ * Symbolic reference to accumulators instances in the context
+ */
+export interface ParametrizedStrategy {
+    VisitorItemCounter?:            EventVisitorItemCounterStaticParams;
+    ItemCounter?:                   EventTypeItemCounterStaticParams;
+    ItemCooccurences?:              EventItemTypeItemCooccurenceStaticParams;
+    ContentItemMatcher?:            ContentItemMatcherStaticParams;
+    OfflineRecommendationsStorage?: OfflineRecommendationsStorageStaticParams;
+    SessionBasedCooccurence?:       SessionItemsCooccurenceStaticParams;
+}
+
+export interface ContentItemMatcherStaticParams {
+    item_type?: ItemType | null;
+}
+
+export interface EventItemTypeItemCooccurenceStaticParams {
+    event_type_a: EventType;
+    event_type_b: EventType;
+    item_type_a:  ItemType;
+    item_type_b:  ItemType;
+}
+
+export interface EventTypeItemCounterStaticParams {
+    event_type: EventType;
+    item_type:  ItemType;
+}
+
+export interface OfflineRecommendationsStorageStaticParams {
+    rec_type: OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
+}
+
+/**
+ * These are strategies that are just using other accumulators to generate candidates. They
+ * don't have any internal state
+ *
+ * The use case is to generate candidates based on the recent user history and event type
+ * and item type coocurrences
+ */
+export interface SessionItemsCooccurenceStaticParams {
+    cooccurence:    EventItemTypeItemCooccurenceStaticParams;
+    item_generator: EventVisitorItemCounterStaticParams;
+}
+
+export interface EventVisitorItemCounterStaticParams {
+    event_type:     EventType;
+    item_type:      ItemType;
+    user_info_type: UserInfoType;
+}
+
+export enum UserInfoType {
+    Session = "SESSION",
+    User = "USER",
+    Visitor = "VISITOR",
 }
 
 export interface PlacementUpsert {
@@ -798,21 +824,21 @@ export enum StrategySelectorStrategyChooseOne {
 }
 
 export interface WeightedGenericCandidateRec {
-    strategy: StrategyGenericStrategies | StrategyEnum;
+    strategy: StrategyDynamicStrategies | StrategyEnum;
     weight?:  number | null;
 }
 
 /**
+ * Parametrized strategies
+ *
  * Pre-defined strategies
  *
  * Build your custom strategies
- *
- * Similar description, image or other defined by you
  */
-export interface StrategyGenericStrategies {
+export interface StrategyDynamicStrategies {
+    Parametrized?:    ParametrizedStrategy;
     Generic?:         GenericStrategy;
     StrategyBuilder?: string;
-    Similarities?:    OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
 }
 
 export interface PurchaseComplete {
@@ -852,21 +878,21 @@ export interface ItemDetailsRecoShow {
     item:              Item;
     rec_id:            string;
     score?:            number | null;
-    strategies_used?:  Array<Array<StrategiesUsedGenericStrategies | number | StrategyEnum>> | null;
-    strategy_selected: StrategyGenericStrategies | StrategyEnum;
+    strategies_used?:  Array<Array<StrategiesUsedDynamicStrategies | number | StrategyEnum>> | null;
+    strategy_selected: StrategyDynamicStrategies | StrategyEnum;
 }
 
 /**
+ * Parametrized strategies
+ *
  * Pre-defined strategies
  *
  * Build your custom strategies
- *
- * Similar description, image or other defined by you
  */
-export interface StrategiesUsedGenericStrategies {
+export interface StrategiesUsedDynamicStrategies {
+    Parametrized?:    ParametrizedStrategy;
     Generic?:         GenericStrategy;
     StrategyBuilder?: string;
-    Similarities?:    OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
 }
 
 export interface PlacementConfig {
@@ -1261,6 +1287,14 @@ export class Convert {
         return uncast(value, r("ExactPrice"));
     }
 
+    public static toItem(json: any): Item {
+        return cast(json, r("Item"));
+    }
+
+    public static itemToJson(value: Item): any {
+        return uncast(value, r("Item"));
+    }
+
     public static toStock(json: any): Stock {
         return cast(json, r("Stock"));
     }
@@ -1325,28 +1359,12 @@ export class Convert {
         return uncast(value, r("APISettings"));
     }
 
-    public static toCategoryPageView(json: any): CategoryPageView {
-        return cast(json, r("CategoryPageView"));
-    }
-
-    public static categoryPageViewToJson(value: CategoryPageView): any {
-        return uncast(value, r("CategoryPageView"));
-    }
-
     public static toChangeItemStockState(json: any): ChangeItemStockState {
         return cast(json, r("ChangeItemStockState"));
     }
 
     public static changeItemStockStateToJson(value: ChangeItemStockState): any {
         return uncast(value, r("ChangeItemStockState"));
-    }
-
-    public static toItem(json: any): Item {
-        return cast(json, r("Item"));
-    }
-
-    public static itemToJson(value: Item): any {
-        return uncast(value, r("Item"));
     }
 
     public static toCheckoutStart(json: any): CheckoutStart {
@@ -1427,14 +1445,6 @@ export class Convert {
 
     public static itemRemoveToJson(value: ItemRemove): any {
         return uncast(value, r("ItemRemove"));
-    }
-
-    public static toItemsImpression(json: any): ItemsImpression {
-        return cast(json, r("ItemsImpression"));
-    }
-
-    public static itemsImpressionToJson(value: ItemsImpression): any {
-        return uncast(value, r("ItemsImpression"));
     }
 
     public static toItemsView(json: any): ItemsView {
@@ -1525,12 +1535,68 @@ export class Convert {
         return uncast(value, r("LIFOVecForUint128"));
     }
 
-    public static toGenericStrategiesObject(json: any): GenericStrategiesObject {
-        return cast(json, r("GenericStrategiesObject"));
+    public static toDynamicStrategiesObject(json: any): DynamicStrategiesObject {
+        return cast(json, r("DynamicStrategiesObject"));
     }
 
-    public static genericStrategiesObjectToJson(value: GenericStrategiesObject): any {
-        return uncast(value, r("GenericStrategiesObject"));
+    public static dynamicStrategiesObjectToJson(value: DynamicStrategiesObject): any {
+        return uncast(value, r("DynamicStrategiesObject"));
+    }
+
+    public static toParametrizedStrategy(json: any): ParametrizedStrategy {
+        return cast(json, r("ParametrizedStrategy"));
+    }
+
+    public static parametrizedStrategyToJson(value: ParametrizedStrategy): any {
+        return uncast(value, r("ParametrizedStrategy"));
+    }
+
+    public static toContentItemMatcherStaticParams(json: any): ContentItemMatcherStaticParams {
+        return cast(json, r("ContentItemMatcherStaticParams"));
+    }
+
+    public static contentItemMatcherStaticParamsToJson(value: ContentItemMatcherStaticParams): any {
+        return uncast(value, r("ContentItemMatcherStaticParams"));
+    }
+
+    public static toEventItemTypeItemCooccurenceStaticParams(json: any): EventItemTypeItemCooccurenceStaticParams {
+        return cast(json, r("EventItemTypeItemCooccurenceStaticParams"));
+    }
+
+    public static eventItemTypeItemCooccurenceStaticParamsToJson(value: EventItemTypeItemCooccurenceStaticParams): any {
+        return uncast(value, r("EventItemTypeItemCooccurenceStaticParams"));
+    }
+
+    public static toEventTypeItemCounterStaticParams(json: any): EventTypeItemCounterStaticParams {
+        return cast(json, r("EventTypeItemCounterStaticParams"));
+    }
+
+    public static eventTypeItemCounterStaticParamsToJson(value: EventTypeItemCounterStaticParams): any {
+        return uncast(value, r("EventTypeItemCounterStaticParams"));
+    }
+
+    public static toOfflineRecommendationsStorageStaticParams(json: any): OfflineRecommendationsStorageStaticParams {
+        return cast(json, r("OfflineRecommendationsStorageStaticParams"));
+    }
+
+    public static offlineRecommendationsStorageStaticParamsToJson(value: OfflineRecommendationsStorageStaticParams): any {
+        return uncast(value, r("OfflineRecommendationsStorageStaticParams"));
+    }
+
+    public static toSessionItemsCooccurenceStaticParams(json: any): SessionItemsCooccurenceStaticParams {
+        return cast(json, r("SessionItemsCooccurenceStaticParams"));
+    }
+
+    public static sessionItemsCooccurenceStaticParamsToJson(value: SessionItemsCooccurenceStaticParams): any {
+        return uncast(value, r("SessionItemsCooccurenceStaticParams"));
+    }
+
+    public static toEventVisitorItemCounterStaticParams(json: any): EventVisitorItemCounterStaticParams {
+        return cast(json, r("EventVisitorItemCounterStaticParams"));
+    }
+
+    public static eventVisitorItemCounterStaticParamsToJson(value: EventVisitorItemCounterStaticParams): any {
+        return uncast(value, r("EventVisitorItemCounterStaticParams"));
     }
 
     public static toPlacementUpsert(json: any): PlacementUpsert {
@@ -1549,12 +1615,12 @@ export class Convert {
         return uncast(value, r("WeightedGenericCandidateRec"));
     }
 
-    public static toStrategyGenericStrategies(json: any): StrategyGenericStrategies {
-        return cast(json, r("StrategyGenericStrategies"));
+    public static toStrategyDynamicStrategies(json: any): StrategyDynamicStrategies {
+        return cast(json, r("StrategyDynamicStrategies"));
     }
 
-    public static strategyGenericStrategiesToJson(value: StrategyGenericStrategies): any {
-        return uncast(value, r("StrategyGenericStrategies"));
+    public static strategyDynamicStrategiesToJson(value: StrategyDynamicStrategies): any {
+        return uncast(value, r("StrategyDynamicStrategies"));
     }
 
     public static toPurchaseComplete(json: any): PurchaseComplete {
@@ -1589,12 +1655,12 @@ export class Convert {
         return uncast(value, r("ItemDetailsRecoShow"));
     }
 
-    public static toStrategiesUsedGenericStrategies(json: any): StrategiesUsedGenericStrategies {
-        return cast(json, r("StrategiesUsedGenericStrategies"));
+    public static toStrategiesUsedDynamicStrategies(json: any): StrategiesUsedDynamicStrategies {
+        return cast(json, r("StrategiesUsedDynamicStrategies"));
     }
 
-    public static strategiesUsedGenericStrategiesToJson(value: StrategiesUsedGenericStrategies): any {
-        return uncast(value, r("StrategiesUsedGenericStrategies"));
+    public static strategiesUsedDynamicStrategiesToJson(value: StrategiesUsedDynamicStrategies): any {
+        return uncast(value, r("StrategiesUsedDynamicStrategies"));
     }
 
     public static toPlacementConfig(json: any): PlacementConfig {
@@ -1883,8 +1949,7 @@ const typeMap: any = {
     ], "any"),
     "ItemDetails": o([
         { json: "attributes", js: "attributes", typ: u(undefined, u(null, r("Attributes"))) },
-        { json: "item_id", js: "item_id", typ: "" },
-        { json: "item_type", js: "item_type", typ: r("ItemType") },
+        { json: "item", js: "item", typ: r("Item") },
     ], "any"),
     "Attributes": o([
         { json: "article", js: "article", typ: u(undefined, u(null, r("Article"))) },
@@ -1894,6 +1959,7 @@ const typeMap: any = {
         { json: "ecommerce", js: "ecommerce", typ: u(undefined, u(null, r("ItemEcommerceSpec"))) },
         { json: "images", js: "images", typ: u(undefined, u(null, r("Images"))) },
         { json: "price", js: "price", typ: u(undefined, u(null, r("ExactPrice"))) },
+        { json: "related_items", js: "related_items", typ: u(undefined, u(a(r("Item")), null)) },
         { json: "stock", js: "stock", typ: u(undefined, u(null, r("Stock"))) },
         { json: "tags", js: "tags", typ: u(undefined, u(null, r("Tags"))) },
         { json: "url", js: "url", typ: r("ItemURL") },
@@ -1931,6 +1997,10 @@ const typeMap: any = {
         { json: "currency_code", js: "currency_code", typ: u(undefined, u(r("Currency"), null)) },
         { json: "display_price", js: "display_price", typ: 3.14 },
         { json: "original_price", js: "original_price", typ: 3.14 },
+    ], "any"),
+    "Item": o([
+        { json: "item_id", js: "item_id", typ: "" },
+        { json: "item_type", js: "item_type", typ: r("ItemType") },
     ], "any"),
     "Stock": o([
         { json: "available_quantity", js: "available_quantity", typ: u(undefined, u(0, null)) },
@@ -1975,15 +2045,6 @@ const typeMap: any = {
     "APISettings": o([
         { json: "url_api", js: "url_api", typ: "" },
     ], "any"),
-    "CategoryPageView": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
-        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
-        { json: "event_type", js: "event_type", typ: r("EventType") },
-        { json: "items", js: "items", typ: a(r("ItemDetails")) },
-        { json: "on_screen", js: "on_screen", typ: true },
-        { json: "page_categories", js: "page_categories", typ: u(undefined, u(a(""), null)) },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
-    ], "any"),
     "ChangeItemStockState": o([
         { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
@@ -1991,10 +2052,6 @@ const typeMap: any = {
         { json: "item", js: "item", typ: r("Item") },
         { json: "stock_state", js: "stock_state", typ: r("StockState") },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
-    ], "any"),
-    "Item": o([
-        { json: "item_id", js: "item_id", typ: "" },
-        { json: "item_type", js: "item_type", typ: r("ItemType") },
     ], "any"),
     "CheckoutStart": o([
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
@@ -2065,15 +2122,6 @@ const typeMap: any = {
         { json: "item", js: "item", typ: r("Item") },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
-    "ItemsImpression": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
-        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
-        { json: "event_type", js: "event_type", typ: r("EventType") },
-        { json: "items", js: "items", typ: a(r("ItemDetails")) },
-        { json: "on_screen", js: "on_screen", typ: true },
-        { json: "page_categories", js: "page_categories", typ: u(undefined, u(a(""), null)) },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
-    ], "any"),
     "ItemsView": o([
         { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
@@ -2139,18 +2187,51 @@ const typeMap: any = {
     ], "any"),
     "PlacementStatisticsJSONReady": o([
         { json: "loading_times_microseconds", js: "loading_times_microseconds", typ: m(r("LIFOVecForUint128")) },
-        { json: "placements_statistics", js: "placements_statistics", typ: m(a(a(u(r("StrategyEnum"), r("GenericStrategiesObject"))))) },
+        { json: "placements_statistics", js: "placements_statistics", typ: m(a(a(u(r("StrategyEnum"), r("DynamicStrategiesObject"))))) },
     ], "any"),
     "LIFOVecForUint128": o([
         { json: "base", js: "base", typ: a(0) },
         { json: "capacity", js: "capacity", typ: 0 },
     ], "any"),
-    "GenericStrategiesObject": o([
+    "DynamicStrategiesObject": o([
+        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
         { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
         { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
-        { json: "Similarities", js: "Similarities", typ: u(undefined, u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum"))) },
         { json: "n_impressions", js: "n_impressions", typ: u(undefined, 0) },
         { json: "n_success", js: "n_success", typ: u(undefined, 0) },
+    ], "any"),
+    "ParametrizedStrategy": o([
+        { json: "VisitorItemCounter", js: "VisitorItemCounter", typ: u(undefined, r("EventVisitorItemCounterStaticParams")) },
+        { json: "ItemCounter", js: "ItemCounter", typ: u(undefined, r("EventTypeItemCounterStaticParams")) },
+        { json: "ItemCooccurences", js: "ItemCooccurences", typ: u(undefined, r("EventItemTypeItemCooccurenceStaticParams")) },
+        { json: "ContentItemMatcher", js: "ContentItemMatcher", typ: u(undefined, r("ContentItemMatcherStaticParams")) },
+        { json: "OfflineRecommendationsStorage", js: "OfflineRecommendationsStorage", typ: u(undefined, r("OfflineRecommendationsStorageStaticParams")) },
+        { json: "SessionBasedCooccurence", js: "SessionBasedCooccurence", typ: u(undefined, r("SessionItemsCooccurenceStaticParams")) },
+    ], false),
+    "ContentItemMatcherStaticParams": o([
+        { json: "item_type", js: "item_type", typ: u(undefined, u(r("ItemType"), null)) },
+    ], "any"),
+    "EventItemTypeItemCooccurenceStaticParams": o([
+        { json: "event_type_a", js: "event_type_a", typ: r("EventType") },
+        { json: "event_type_b", js: "event_type_b", typ: r("EventType") },
+        { json: "item_type_a", js: "item_type_a", typ: r("ItemType") },
+        { json: "item_type_b", js: "item_type_b", typ: r("ItemType") },
+    ], "any"),
+    "EventTypeItemCounterStaticParams": o([
+        { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "item_type", js: "item_type", typ: r("ItemType") },
+    ], "any"),
+    "OfflineRecommendationsStorageStaticParams": o([
+        { json: "rec_type", js: "rec_type", typ: u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum")) },
+    ], "any"),
+    "SessionItemsCooccurenceStaticParams": o([
+        { json: "cooccurence", js: "cooccurence", typ: r("EventItemTypeItemCooccurenceStaticParams") },
+        { json: "item_generator", js: "item_generator", typ: r("EventVisitorItemCounterStaticParams") },
+    ], "any"),
+    "EventVisitorItemCounterStaticParams": o([
+        { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "item_type", js: "item_type", typ: r("ItemType") },
+        { json: "user_info_type", js: "user_info_type", typ: r("UserInfoType") },
     ], "any"),
     "PlacementUpsert": o([
         { json: "enabled", js: "enabled", typ: u(undefined, true) },
@@ -2167,13 +2248,13 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "WeightedGenericCandidateRec": o([
-        { json: "strategy", js: "strategy", typ: u(r("StrategyGenericStrategies"), r("StrategyEnum")) },
+        { json: "strategy", js: "strategy", typ: u(r("StrategyDynamicStrategies"), r("StrategyEnum")) },
         { json: "weight", js: "weight", typ: u(undefined, u(3.14, null)) },
     ], "any"),
-    "StrategyGenericStrategies": o([
+    "StrategyDynamicStrategies": o([
+        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
         { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
         { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
-        { json: "Similarities", js: "Similarities", typ: u(undefined, u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum"))) },
     ], false),
     "PurchaseComplete": o([
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
@@ -2206,13 +2287,13 @@ const typeMap: any = {
         { json: "item", js: "item", typ: r("Item") },
         { json: "rec_id", js: "rec_id", typ: "" },
         { json: "score", js: "score", typ: u(undefined, u(3.14, null)) },
-        { json: "strategies_used", js: "strategies_used", typ: u(undefined, u(a(a(u(r("StrategiesUsedGenericStrategies"), 3.14, r("StrategyEnum")))), null)) },
-        { json: "strategy_selected", js: "strategy_selected", typ: u(r("StrategyGenericStrategies"), r("StrategyEnum")) },
+        { json: "strategies_used", js: "strategies_used", typ: u(undefined, u(a(a(u(r("StrategiesUsedDynamicStrategies"), 3.14, r("StrategyEnum")))), null)) },
+        { json: "strategy_selected", js: "strategy_selected", typ: u(r("StrategyDynamicStrategies"), r("StrategyEnum")) },
     ], "any"),
-    "StrategiesUsedGenericStrategies": o([
+    "StrategiesUsedDynamicStrategies": o([
+        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
         { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
         { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
-        { json: "Similarities", js: "Similarities", typ: u(undefined, u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum"))) },
     ], false),
     "PlacementConfig": o([
         { json: "html_template", js: "html_template", typ: u(undefined, u(null, "")) },
@@ -2551,17 +2632,17 @@ const typeMap: any = {
         "ZMW",
         "ZWL",
     ],
-    "StockState": [
-        "BackOrder",
-        "InStock",
-        "OutOfStock",
-        "PreOrder",
-    ],
     "ItemType": [
         "Article",
         "Ecommerce",
         "Unknown",
         "Video",
+    ],
+    "StockState": [
+        "BackOrder",
+        "InStock",
+        "OutOfStock",
+        "PreOrder",
     ],
     "Gender": [
         "Female",
@@ -2661,18 +2742,15 @@ const typeMap: any = {
         "Unknown",
     ],
     "GenericStrategy": [
-        "AlsoAddedToCart",
-        "AlsoPurchased",
-        "AlsoSeen",
         "BestsellerCategory",
-        "BestsellerGlobal",
-        "ContentMatching",
-        "MostPurchases",
-        "MostViews",
         "SearchMatching",
-        "SeenInSession",
         "SeenInSessionCoccurAddedToCart",
         "SeenInSessionCoccurSeen",
+    ],
+    "UserInfoType": [
+        "SESSION",
+        "USER",
+        "VISITOR",
     ],
     "Location": [
         "AddToCart",
