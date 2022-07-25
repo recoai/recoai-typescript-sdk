@@ -1,14 +1,14 @@
 // To parse this data:
 //
-//   import { Convert, AddToCart, AddToList, APISettings, BuilderFn1, BuilderFn2, BuilderVariable, ChangeItemStockState, CheckoutStart, DetailItemView, HomePageView, ImageInteraction, ItemAttributesSelection, ItemRemove, ItemsView, ItemUpsert, ListView, OfflineRecommendationsRemove, OfflineRecommendationsUpsert, OtherInteraction, PageVisit, PlacementRemove, PlacementStatisticsJSONReady, PlacementUpsert, PurchaseComplete, RateItem, RecoACK, RecoRequest, RecoShow, RemoveFromCart, RemoveFromList, SearchItems, CartPageView, SmartSearchRequest, SmartSearchShow, SortItems, StrategyParametersTypes, UnknownEvent, VideoInteraction } from "./file";
+//   import { Convert, AddToCart, AddToList, APIClaimsConfig, APISettings, BuilderFn1, BuilderFn2, BuilderVariable, CheckoutStart, DetailItemView, HomePageView, ImageInteraction, ItemAttributesSelection, ItemRemove, ItemsView, ItemUpsert, ListView, OfflineRecommendationsRemove, OfflineRecommendationsUpsert, OtherInteraction, PageVisit, ContentItemMatcherStaticParams, EventItemTypeItemCooccurenceStaticParams, EventTypeItemCounterStaticParams, OfflineRecommendationsStorageStaticParams, SessionItemsCooccurenceStaticParams, EventVisitorItemCounterStaticParams, PlacementRemove, PlacementStatisticsJSONReady, PlacementUpsert, PurchaseComplete, RateItem, RecoACK, RecoClick, RecoRequest, RecoShow, RemoveFromCart, RemoveFromList, RescoreRequest, RescoreResponse, SearchItems, CartPageView, SmartSearchRequest, SmartSearchShow, SortItems, StrategyParametersTypes, StrategyRemove, StrategyUpsert } from "./file";
 //
 //   const addToCart = Convert.toAddToCart(json);
 //   const addToList = Convert.toAddToList(json);
+//   const aPIClaimsConfig = Convert.toAPIClaimsConfig(json);
 //   const aPISettings = Convert.toAPISettings(json);
 //   const builderFn1 = Convert.toBuilderFn1(json);
 //   const builderFn2 = Convert.toBuilderFn2(json);
 //   const builderVariable = Convert.toBuilderVariable(json);
-//   const changeItemStockState = Convert.toChangeItemStockState(json);
 //   const checkoutStart = Convert.toCheckoutStart(json);
 //   const common = Convert.toCommon(json);
 //   const detailItemView = Convert.toDetailItemView(json);
@@ -23,49 +23,58 @@
 //   const offlineRecommendationsUpsert = Convert.toOfflineRecommendationsUpsert(json);
 //   const otherInteraction = Convert.toOtherInteraction(json);
 //   const pageVisit = Convert.toPageVisit(json);
+//   const contentItemMatcherStaticParams = Convert.toContentItemMatcherStaticParams(json);
+//   const eventItemTypeItemCooccurenceStaticParams = Convert.toEventItemTypeItemCooccurenceStaticParams(json);
+//   const eventTypeItemCounterStaticParams = Convert.toEventTypeItemCounterStaticParams(json);
+//   const offlineRecommendationsStorageStaticParams = Convert.toOfflineRecommendationsStorageStaticParams(json);
+//   const sessionItemsCooccurenceStaticParams = Convert.toSessionItemsCooccurenceStaticParams(json);
+//   const eventVisitorItemCounterStaticParams = Convert.toEventVisitorItemCounterStaticParams(json);
 //   const placementRemove = Convert.toPlacementRemove(json);
 //   const placementStatisticsJSONReady = Convert.toPlacementStatisticsJSONReady(json);
 //   const placementUpsert = Convert.toPlacementUpsert(json);
 //   const purchaseComplete = Convert.toPurchaseComplete(json);
 //   const rateItem = Convert.toRateItem(json);
 //   const recoACK = Convert.toRecoACK(json);
+//   const recoClick = Convert.toRecoClick(json);
 //   const recoRequest = Convert.toRecoRequest(json);
 //   const recoShow = Convert.toRecoShow(json);
 //   const removeFromCart = Convert.toRemoveFromCart(json);
 //   const removeFromList = Convert.toRemoveFromList(json);
+//   const rescoreRequest = Convert.toRescoreRequest(json);
+//   const rescoreResponse = Convert.toRescoreResponse(json);
 //   const searchItems = Convert.toSearchItems(json);
 //   const cartPageView = Convert.toCartPageView(json);
 //   const smartSearchRequest = Convert.toSmartSearchRequest(json);
 //   const smartSearchShow = Convert.toSmartSearchShow(json);
 //   const sortItems = Convert.toSortItems(json);
 //   const strategyParametersTypes = Convert.toStrategyParametersTypes(json);
-//   const unknownEvent = Convert.toUnknownEvent(json);
-//   const videoInteraction = Convert.toVideoInteraction(json);
+//   const strategyRemove = Convert.toStrategyRemove(json);
+//   const strategyUpsert = Convert.toStrategyUpsert(json);
 //
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
 export interface AddToCart {
-    cart_id?:      null | string;
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          ItemDetails;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    cart_id?:       null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    item:           ItemDetails;
+    user_info:      UserInfo;
 }
 
-export interface EventDetail {
+export interface EventDetails {
     event_attributes?: { [key: string]: string } | null;
     experiment_ids?:   number | null;
     rec_id?:           null | string;
-    url:               string;
+    url?:              null | string;
 }
 
 export enum EventType {
     AddToCart = "AddToCart",
     AddToList = "AddToList",
     CartPageView = "CartPageView",
-    ChangeItemStockState = "ChangeItemStockState",
     CheckoutStart = "CheckoutStart",
     DetailItemView = "DetailItemView",
     HomePageView = "HomePageView",
@@ -83,16 +92,19 @@ export enum EventType {
     PurchaseComplete = "PurchaseComplete",
     RateItem = "RateItem",
     RecoACK = "RecoAck",
+    RecoClick = "RecoClick",
     RecoRequest = "RecoRequest",
     RecoShow = "RecoShow",
     RemoveFromCart = "RemoveFromCart",
     RemoveFromList = "RemoveFromList",
+    RescoreRequest = "RescoreRequest",
+    RescoreResponse = "RescoreResponse",
     SearchItems = "SearchItems",
     SmartSearchRequest = "SmartSearchRequest",
     SmartSearchShow = "SmartSearchShow",
     SortItems = "SortItems",
-    UnknownEvent = "UnknownEvent",
-    VideoInteraction = "VideoInteraction",
+    StrategyRemove = "StrategyRemove",
+    StrategyUpsert = "StrategyUpsert",
 }
 
 export interface ItemDetails {
@@ -105,18 +117,19 @@ export interface ItemDetails {
  * component list.
  */
 export interface Attributes {
-    article?:       null | Article;
-    categories?:    null | Categories;
-    costs?:         null | Costs;
-    description?:   null | Description;
-    ecommerce?:     null | ItemEcommerceSpec;
-    images?:        null | Images;
-    price?:         null | ExactPrice;
-    related_items?: Item[] | null;
-    stock?:         null | Stock;
-    tags?:          null | Tags;
-    url:            ItemURL;
-    video?:         null | Video;
+    article?:           null | Article;
+    categories?:        null | Categories;
+    costs?:             null | Costs;
+    custom_attributes?: null | CustomAttributes;
+    description?:       null | Description;
+    ecommerce?:         null | ItemEcommerceSpec;
+    images?:            null | Images;
+    price?:             null | ExactPrice;
+    related_items?:     Item[] | null;
+    stock?:             null | Stock;
+    tags?:              null | Tags;
+    url:                ItemURL;
+    video?:             null | Video;
 }
 
 export interface Article {
@@ -131,6 +144,12 @@ export interface Categories {
 
 export interface Costs {
     costs: { [key: string]: number };
+}
+
+export interface CustomAttributes {
+    boolean?: { [key: string]: boolean } | null;
+    numeric?: { [key: string]: number } | null;
+    string?:  { [key: string]: string } | null;
 }
 
 export interface Description {
@@ -385,7 +404,6 @@ export interface UserAdditionalInfo {
     gender?:     Gender | null;
     ip?:         null | string;
     location?:   null | string;
-    session_id?: null | string;
     user_agent?: null | string;
 }
 
@@ -401,12 +419,29 @@ export enum PrivacySetting {
 }
 
 export interface AddToList {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          ItemDetails;
-    list_id:       string;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    item:           ItemDetails;
+    list_id:        string;
+    user_info:      UserInfo;
+}
+
+/**
+ * This is claims configuration for API IMPORTANT! This is the same struct as in
+ * recoai_webapp moved here because we want to generate JSON schema for it.
+ */
+export interface APIClaimsConfig {
+    duration_hours?: number | null;
+    event_functions: EventFunction[];
+}
+
+export enum EventFunction {
+    Config = "Config",
+    Reco = "Reco",
+    Search = "Search",
+    User = "User",
 }
 
 export interface APISettings {
@@ -448,18 +483,10 @@ export enum BuilderVariable {
     ItemsVisitedCounter = "ItemsVisitedCounter",
 }
 
-export interface ChangeItemStockState {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          Item;
-    stock_state:   StockState;
-    user_info:     UserInfo;
-}
-
 export interface CheckoutStart {
+    api_token?:           null | string;
     cart_id?:             null | string;
-    event_detail?:        null | EventDetail;
+    event_details?:       null | EventDetails;
     event_time?:          number | null;
     event_type:           EventType;
     items:                ItemDetails[];
@@ -481,7 +508,8 @@ export interface Taxes {
 }
 
 export interface DetailItemView {
-    event_detail?:    null | EventDetail;
+    api_token?:       null | string;
+    event_details?:   null | EventDetails;
     event_time?:      number | null;
     event_type:       EventType;
     item:             ItemDetails;
@@ -496,6 +524,7 @@ export interface DetailItemViewAttributes {
      * whether someone read the whole article
      */
     completed?: boolean | null;
+    view_perc?: number | null;
     /**
      * This attribute can be used for different item types. For - Video - means watch time -
      * Article - reading time - Ecommerce - time spend on viewing the product
@@ -504,18 +533,20 @@ export interface DetailItemViewAttributes {
 }
 
 export interface HomePageView {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    user_info:      UserInfo;
 }
 
 export interface ImageInteraction {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          ItemDetails;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    item:           ItemDetails;
+    user_info:      UserInfo;
 }
 
 export interface ItemAttributesSelectionClass {
@@ -597,15 +628,15 @@ export enum ItemAttributesSelectionEnum {
 }
 
 export interface ItemRemove {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          Item;
-    user_info:     UserInfo;
+    api_token?:  null | string;
+    event_time?: number | null;
+    event_type:  EventType;
+    item:        Item;
 }
 
 export interface ItemsView {
-    event_detail?:    null | EventDetail;
+    api_token?:       null | string;
+    event_details?:   null | EventDetails;
     event_time?:      number | null;
     event_type:       EventType;
     items:            ItemDetails[];
@@ -615,28 +646,27 @@ export interface ItemsView {
 }
 
 export interface ItemUpsert {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item_details:  ItemDetails;
-    user_info:     UserInfo;
+    api_token?:   null | string;
+    event_time?:  number | null;
+    event_type:   EventType;
+    item_details: ItemDetails;
 }
 
 export interface ListView {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    items:         ItemDetails[];
-    list_id:       string;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    items:          ItemDetails[];
+    list_id:        string;
+    user_info:      UserInfo;
 }
 
 export interface OfflineRecommendationsRemove {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    name:          OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
-    user_info:     UserInfo;
+    api_token?:  null | string;
+    event_time?: number | null;
+    event_type:  EventType;
+    name:        OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
 }
 
 export interface OfflineRecommendationsTypeClass {
@@ -650,16 +680,16 @@ export enum OfflineRecommendationsTypeEnum {
 }
 
 export interface OfflineRecommendationsUpsert {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    matrix:        { [key: string]: { [key: string]: number } };
-    name:          OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
-    user_info:     UserInfo;
+    api_token?:  null | string;
+    event_time?: number | null;
+    event_type:  EventType;
+    matrix:      { [key: string]: { [key: string]: number } };
+    name:        OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
 }
 
 export interface OtherInteraction {
-    event_detail?:    null | EventDetail;
+    api_token?:       null | string;
+    event_details?:   null | EventDetails;
     event_time?:      number | null;
     event_type:       EventType;
     interaction_name: string;
@@ -668,70 +698,11 @@ export interface OtherInteraction {
 }
 
 export interface PageVisit {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    user_info:     UserInfo;
-}
-
-export interface PlacementRemove {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    name:          string;
-    user_info:     UserInfo;
-}
-
-/**
- * Json safe version of PlacementStatistics, unfortunately serde_with doesn't work because
- * of conflicts with JsonSchema
- */
-export interface PlacementStatisticsJSONReady {
-    loading_times_microseconds: { [key: string]: LIFOVecForUint128 };
-    placements_statistics:      { [key: string]: Array<Array<StrategyEnum | DynamicStrategiesObject>> };
-}
-
-export interface LIFOVecForUint128 {
-    base:     number[];
-    capacity: number;
-}
-
-export enum StrategyEnum {
-    Unknown = "Unknown",
-}
-
-/**
- * Parametrized strategies
- *
- * Pre-defined strategies
- *
- * Build your custom strategies
- */
-export interface DynamicStrategiesObject {
-    Parametrized?:    ParametrizedStrategy;
-    Generic?:         GenericStrategy;
-    StrategyBuilder?: string;
-    n_impressions?:   number;
-    n_success?:       number;
-}
-
-export enum GenericStrategy {
-    BestsellerCategory = "BestsellerCategory",
-    SearchMatching = "SearchMatching",
-    SeenInSessionCoccurAddedToCart = "SeenInSessionCoccurAddedToCart",
-    SeenInSessionCoccurSeen = "SeenInSessionCoccurSeen",
-}
-
-/**
- * Symbolic reference to accumulators instances in the context
- */
-export interface ParametrizedStrategy {
-    VisitorItemCounter?:            EventVisitorItemCounterStaticParams;
-    ItemCounter?:                   EventTypeItemCounterStaticParams;
-    ItemCooccurences?:              EventItemTypeItemCooccurenceStaticParams;
-    ContentItemMatcher?:            ContentItemMatcherStaticParams;
-    OfflineRecommendationsStorage?: OfflineRecommendationsStorageStaticParams;
-    SessionBasedCooccurence?:       SessionItemsCooccurenceStaticParams;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    user_info:      UserInfo;
 }
 
 export interface ContentItemMatcherStaticParams {
@@ -739,15 +710,20 @@ export interface ContentItemMatcherStaticParams {
 }
 
 export interface EventItemTypeItemCooccurenceStaticParams {
-    event_type_a: EventType;
-    event_type_b: EventType;
-    item_type_a:  ItemType;
-    item_type_b:  ItemType;
+    event_filter_a: EventFilter;
+    event_filter_b: EventFilter;
+    item_type_a:    ItemType;
+    item_type_b:    ItemType;
+}
+
+export interface EventFilter {
+    condition?: null | string;
+    event_type: EventType;
 }
 
 export interface EventTypeItemCounterStaticParams {
-    event_type: EventType;
-    item_type:  ItemType;
+    event_filter: EventFilter;
+    item_type:    ItemType;
 }
 
 export interface OfflineRecommendationsStorageStaticParams {
@@ -762,27 +738,67 @@ export interface OfflineRecommendationsStorageStaticParams {
  * and item type coocurrences
  */
 export interface SessionItemsCooccurenceStaticParams {
-    cooccurence:    EventItemTypeItemCooccurenceStaticParams;
-    item_generator: EventVisitorItemCounterStaticParams;
+    cooccurence:    CooccurenceObject;
+    item_generator: ItemGeneratorObject;
 }
 
-export interface EventVisitorItemCounterStaticParams {
-    event_type:     EventType;
+export interface CooccurenceObject {
+    event_filter_a: EventFilter;
+    event_filter_b: EventFilter;
+    item_type_a:    ItemType;
+    item_type_b:    ItemType;
+}
+
+export interface ItemGeneratorObject {
+    event_filter:   EventFilter;
     item_type:      ItemType;
     user_info_type: UserInfoType;
 }
 
 export enum UserInfoType {
-    Session = "SESSION",
-    User = "USER",
-    Visitor = "VISITOR",
+    Session = "Session",
+    User = "User",
+    Visitor = "Visitor",
+}
+
+export interface EventVisitorItemCounterStaticParams {
+    event_filter:   EventFilter;
+    item_type:      ItemType;
+    user_info_type: UserInfoType;
+}
+
+export interface PlacementRemove {
+    api_token?:  null | string;
+    event_time?: number | null;
+    event_type:  EventType;
+    name:        string;
+}
+
+/**
+ * Json safe version of PlacementStatistics, unfortunately serde_with doesn't work because
+ * of conflicts with JsonSchema
+ */
+export interface PlacementStatisticsJSONReady {
+    loading_times_microseconds: { [key: string]: LIFOVecForUint128 };
+    placements_statistics:      { [key: string]: Array<Array<SuccessTries | string>> };
+}
+
+export interface LIFOVecForUint128 {
+    base:     number[];
+    capacity: number;
+}
+
+export interface SuccessTries {
+    n_impressions: number;
+    n_success:     number;
 }
 
 export interface PlacementUpsert {
+    api_token?:     null | string;
     enabled?:       boolean;
-    event_detail?:  null | EventDetail;
     event_time?:    number | null;
     event_type:     EventType;
+    filter?:        null | AttributeFilter;
     html_template?: null | string;
     item_type:      ItemType;
     location?:      Location | null;
@@ -793,10 +809,22 @@ export interface PlacementUpsert {
     /**
      * How the strategies are selected
      */
-    ranking:     StrategySelectorStrategyChooseOne;
-    strategies:  WeightedGenericCandidateRec[];
-    url_params?: { [key: string]: string } | null;
-    user_info:   UserInfo;
+    ranking:    StrategySelectorStrategyChooseOne;
+    strategies: WeightedGenericCandidateRec[];
+    /**
+     * This can be useful to track the source of conversions
+     */
+    url_params?: URLParam[] | null;
+}
+
+export interface AttributeFilter {
+    expr: string;
+    typ:  FilterType;
+}
+
+export enum FilterType {
+    Exclude = "Exclude",
+    Include = "Include",
 }
 
 /**
@@ -824,26 +852,19 @@ export enum StrategySelectorStrategyChooseOne {
 }
 
 export interface WeightedGenericCandidateRec {
-    strategy: StrategyDynamicStrategies | StrategyEnum;
-    weight?:  number | null;
+    strategy_name: string;
+    weight?:       number | null;
 }
 
-/**
- * Parametrized strategies
- *
- * Pre-defined strategies
- *
- * Build your custom strategies
- */
-export interface StrategyDynamicStrategies {
-    Parametrized?:    ParametrizedStrategy;
-    Generic?:         GenericStrategy;
-    StrategyBuilder?: string;
+export interface URLParam {
+    name:  string;
+    value: string;
 }
 
 export interface PurchaseComplete {
+    api_token?:           null | string;
     cart_id?:             null | string;
-    event_detail?:        null | EventDetail;
+    event_details?:       null | EventDetails;
     event_time?:          number | null;
     event_type:           EventType;
     items:                ItemDetails[];
@@ -852,17 +873,19 @@ export interface PurchaseComplete {
 }
 
 export interface RateItem {
-    comment?:      null | string;
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          ItemDetails;
-    rating?:       number | null;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    comment?:       null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    item:           ItemDetails;
+    rating?:        number | null;
+    user_info:      UserInfo;
 }
 
 export interface RecoACK {
-    event_detail?:    null | EventDetail;
+    api_token?:       null | string;
+    event_details?:   null | EventDetails;
     event_time?:      number | null;
     event_type:       EventType;
     items:            ItemDetailsRecoShow[];
@@ -874,25 +897,12 @@ export interface RecoACK {
  * Note that ItemDetailsRecoShow is already translated
  */
 export interface ItemDetailsRecoShow {
-    attributes:        Attributes;
-    item:              Item;
-    rec_id:            string;
-    score?:            number | null;
-    strategies_used?:  Array<Array<StrategiesUsedDynamicStrategies | number | StrategyEnum>> | null;
-    strategy_selected: StrategyDynamicStrategies | StrategyEnum;
-}
-
-/**
- * Parametrized strategies
- *
- * Pre-defined strategies
- *
- * Build your custom strategies
- */
-export interface StrategiesUsedDynamicStrategies {
-    Parametrized?:    ParametrizedStrategy;
-    Generic?:         GenericStrategy;
-    StrategyBuilder?: string;
+    attributes:         Attributes;
+    item:               Item;
+    rec_id:             string;
+    score?:             number | null;
+    strategies_used?:   Array<Array<number | string>> | null;
+    strategy_selected?: null | string;
 }
 
 export interface PlacementConfig {
@@ -941,9 +951,18 @@ export interface SearchInfo {
     query?: null | string;
 }
 
+export interface RecoClick {
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    user_info:      UserInfo;
+}
+
 export interface RecoRequest {
     additional_uri_params?: { [key: string]: string } | null;
-    event_detail?:          null | EventDetail;
+    api_token?:             null | string;
+    event_details?:         null | EventDetails;
     event_time?:            number | null;
     event_type:             EventType;
     locale?:                Locale | null;
@@ -1061,7 +1080,8 @@ export enum Locale {
 
 export interface RecoShow {
     additional_uri_params?: { [key: string]: string } | null;
-    event_detail?:          null | EventDetail;
+    api_token?:             null | string;
+    event_details?:         null | EventDetails;
     event_time?:            number | null;
     event_type:             EventType;
     experiment_id?:         null | string;
@@ -1071,51 +1091,85 @@ export interface RecoShow {
 }
 
 export interface RemoveFromCart {
-    cart_id?:      null | string;
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    item:          ItemDetails;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    cart_id?:       null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    item:           ItemDetails;
+    user_info:      UserInfo;
 }
 
 export interface RemoveFromList {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    items:         ItemDetails[];
-    list_id?:      null | string;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    items:          ItemDetails[];
+    list_id?:       null | string;
+    user_info:      UserInfo;
+}
+
+export interface RescoreRequest {
+    api_token?:       null | string;
+    event_details?:   null | EventDetails;
+    event_time?:      number | null;
+    event_type:       EventType;
+    items:            Item[];
+    placement_config: PlacementConfig;
+    user_info:        UserInfo;
+}
+
+export interface RescoreResponse {
+    additional_uri_params?: { [key: string]: string } | null;
+    api_token?:             null | string;
+    event_details?:         null | EventDetails;
+    event_time?:            number | null;
+    event_type:             EventType;
+    experiment_id?:         null | string;
+    items:                  RescoredEntry[];
+    placement_config:       PlacementConfig;
+    user_info:              UserInfo;
+}
+
+export interface RescoredEntry {
+    item:               Item;
+    rec_id:             string;
+    score:              number;
+    strategy_selected?: null | string;
 }
 
 export interface SearchItems {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    items:         ItemDetails[];
-    query:         string;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    items:          ItemDetails[];
+    query:          string;
+    user_info:      UserInfo;
 }
 
 export interface CartPageView {
-    cart_id?:      null | string;
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    items:         ItemDetails[];
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    cart_id?:       null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    items:          ItemDetails[];
+    user_info:      UserInfo;
 }
 
 export interface SmartSearchRequest {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    filter:        { [key: string]: string };
-    n_items:       number;
-    page:          number;
-    query:         string;
-    search_order:  SearchOrder;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    filter:         { [key: string]: string };
+    n_items:        number;
+    page:           number;
+    query:          string;
+    search_order:   SearchOrder;
+    user_info:      UserInfo;
 }
 
 export enum SearchOrder {
@@ -1133,19 +1187,21 @@ export enum SearchOrder {
 }
 
 export interface SmartSearchShow {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    items:         ItemDetailsRecoShow[];
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    items:          ItemDetailsRecoShow[];
+    user_info:      UserInfo;
 }
 
 export interface SortItems {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    sort_order?:   SortOrder | null;
-    user_info:     UserInfo;
+    api_token?:     null | string;
+    event_details?: null | EventDetails;
+    event_time?:    number | null;
+    event_type:     EventType;
+    sort_order?:    SortOrder | null;
+    user_info:      UserInfo;
 }
 
 export enum SortOrder {
@@ -1170,22 +1226,82 @@ export interface StrategyParametersTypes {
     search_info:            boolean;
 }
 
-export interface UnknownEvent {
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    user_info:     UserInfo;
+export interface StrategyRemove {
+    api_token?:  null | string;
+    event_time?: number | null;
+    event_type:  EventType;
+    /**
+     * Lowercase no spaces allowed
+     */
+    name: string;
 }
 
-export interface VideoInteraction {
-    completed?:    boolean | null;
-    event_detail?: null | EventDetail;
-    event_time?:   number | null;
-    event_type:    EventType;
-    items:         ItemDetails[];
-    user_info:     UserInfo;
-    video_item?:   null | Item;
-    watched_secs?: number | null;
+export interface StrategyUpsert {
+    api_token?:  null | string;
+    event_time?: number | null;
+    event_type:  EventType;
+    /**
+     * Lowercase no spaces allowed
+     */
+    name:     string;
+    strategy: Strategy;
+}
+
+/**
+ * Parametrized strategies
+ *
+ * Pre-defined strategies
+ *
+ * Build your custom strategies
+ */
+export interface Strategy {
+    Parametrized?:    ParametrizedStrategy;
+    Generic?:         GenericStrategy;
+    StrategyBuilder?: string;
+}
+
+export enum GenericStrategy {
+    BestsellerCategory = "BestsellerCategory",
+    SearchMatching = "SearchMatching",
+    SeenInSessionCoccurAddedToCart = "SeenInSessionCoccurAddedToCart",
+    SeenInSessionCoccurSeen = "SeenInSessionCoccurSeen",
+}
+
+/**
+ * Symbolic reference to accumulators instances in the context
+ */
+export interface ParametrizedStrategy {
+    VisitorItemCounter?:            ItemGeneratorObject;
+    ItemCounter?:                   ItemCounterObject;
+    ItemCooccurences?:              CooccurenceObject;
+    ContentItemMatcher?:            ContentItemMatcherObject;
+    OfflineRecommendationsStorage?: OfflineRecommendationsStorageObject;
+    SessionBasedCooccurence?:       SessionBasedCooccurenceObject;
+}
+
+export interface ContentItemMatcherObject {
+    item_type?: ItemType | null;
+}
+
+export interface ItemCounterObject {
+    event_filter: EventFilter;
+    item_type:    ItemType;
+}
+
+export interface OfflineRecommendationsStorageObject {
+    rec_type: OfflineRecommendationsTypeClass | OfflineRecommendationsTypeEnum;
+}
+
+/**
+ * These are strategies that are just using other accumulators to generate candidates. They
+ * don't have any internal state
+ *
+ * The use case is to generate candidates based on the recent user history and event type
+ * and item type coocurrences
+ */
+export interface SessionBasedCooccurenceObject {
+    cooccurence:    CooccurenceObject;
+    item_generator: ItemGeneratorObject;
 }
 
 // Converts JSON types to/from your types
@@ -1199,12 +1315,12 @@ export class Convert {
         return uncast(value, r("AddToCart"));
     }
 
-    public static toEventDetail(json: any): EventDetail {
-        return cast(json, r("EventDetail"));
+    public static toEventDetails(json: any): EventDetails {
+        return cast(json, r("EventDetails"));
     }
 
-    public static eventDetailToJson(value: EventDetail): any {
-        return uncast(value, r("EventDetail"));
+    public static eventDetailsToJson(value: EventDetails): any {
+        return uncast(value, r("EventDetails"));
     }
 
     public static toItemDetails(json: any): ItemDetails {
@@ -1245,6 +1361,14 @@ export class Convert {
 
     public static costsToJson(value: Costs): any {
         return uncast(value, r("Costs"));
+    }
+
+    public static toCustomAttributes(json: any): CustomAttributes {
+        return cast(json, r("CustomAttributes"));
+    }
+
+    public static customAttributesToJson(value: CustomAttributes): any {
+        return uncast(value, r("CustomAttributes"));
     }
 
     public static toDescription(json: any): Description {
@@ -1351,20 +1475,20 @@ export class Convert {
         return uncast(value, r("AddToList"));
     }
 
+    public static toAPIClaimsConfig(json: any): APIClaimsConfig {
+        return cast(json, r("APIClaimsConfig"));
+    }
+
+    public static aPIClaimsConfigToJson(value: APIClaimsConfig): any {
+        return uncast(value, r("APIClaimsConfig"));
+    }
+
     public static toAPISettings(json: any): APISettings {
         return cast(json, r("APISettings"));
     }
 
     public static aPISettingsToJson(value: APISettings): any {
         return uncast(value, r("APISettings"));
-    }
-
-    public static toChangeItemStockState(json: any): ChangeItemStockState {
-        return cast(json, r("ChangeItemStockState"));
-    }
-
-    public static changeItemStockStateToJson(value: ChangeItemStockState): any {
-        return uncast(value, r("ChangeItemStockState"));
     }
 
     public static toCheckoutStart(json: any): CheckoutStart {
@@ -1511,46 +1635,6 @@ export class Convert {
         return uncast(value, r("PageVisit"));
     }
 
-    public static toPlacementRemove(json: any): PlacementRemove {
-        return cast(json, r("PlacementRemove"));
-    }
-
-    public static placementRemoveToJson(value: PlacementRemove): any {
-        return uncast(value, r("PlacementRemove"));
-    }
-
-    public static toPlacementStatisticsJSONReady(json: any): PlacementStatisticsJSONReady {
-        return cast(json, r("PlacementStatisticsJSONReady"));
-    }
-
-    public static placementStatisticsJSONReadyToJson(value: PlacementStatisticsJSONReady): any {
-        return uncast(value, r("PlacementStatisticsJSONReady"));
-    }
-
-    public static toLIFOVecForUint128(json: any): LIFOVecForUint128 {
-        return cast(json, r("LIFOVecForUint128"));
-    }
-
-    public static lIFOVecForUint128ToJson(value: LIFOVecForUint128): any {
-        return uncast(value, r("LIFOVecForUint128"));
-    }
-
-    public static toDynamicStrategiesObject(json: any): DynamicStrategiesObject {
-        return cast(json, r("DynamicStrategiesObject"));
-    }
-
-    public static dynamicStrategiesObjectToJson(value: DynamicStrategiesObject): any {
-        return uncast(value, r("DynamicStrategiesObject"));
-    }
-
-    public static toParametrizedStrategy(json: any): ParametrizedStrategy {
-        return cast(json, r("ParametrizedStrategy"));
-    }
-
-    public static parametrizedStrategyToJson(value: ParametrizedStrategy): any {
-        return uncast(value, r("ParametrizedStrategy"));
-    }
-
     public static toContentItemMatcherStaticParams(json: any): ContentItemMatcherStaticParams {
         return cast(json, r("ContentItemMatcherStaticParams"));
     }
@@ -1565,6 +1649,14 @@ export class Convert {
 
     public static eventItemTypeItemCooccurenceStaticParamsToJson(value: EventItemTypeItemCooccurenceStaticParams): any {
         return uncast(value, r("EventItemTypeItemCooccurenceStaticParams"));
+    }
+
+    public static toEventFilter(json: any): EventFilter {
+        return cast(json, r("EventFilter"));
+    }
+
+    public static eventFilterToJson(value: EventFilter): any {
+        return uncast(value, r("EventFilter"));
     }
 
     public static toEventTypeItemCounterStaticParams(json: any): EventTypeItemCounterStaticParams {
@@ -1591,12 +1683,60 @@ export class Convert {
         return uncast(value, r("SessionItemsCooccurenceStaticParams"));
     }
 
+    public static toCooccurenceObject(json: any): CooccurenceObject {
+        return cast(json, r("CooccurenceObject"));
+    }
+
+    public static cooccurenceObjectToJson(value: CooccurenceObject): any {
+        return uncast(value, r("CooccurenceObject"));
+    }
+
+    public static toItemGeneratorObject(json: any): ItemGeneratorObject {
+        return cast(json, r("ItemGeneratorObject"));
+    }
+
+    public static itemGeneratorObjectToJson(value: ItemGeneratorObject): any {
+        return uncast(value, r("ItemGeneratorObject"));
+    }
+
     public static toEventVisitorItemCounterStaticParams(json: any): EventVisitorItemCounterStaticParams {
         return cast(json, r("EventVisitorItemCounterStaticParams"));
     }
 
     public static eventVisitorItemCounterStaticParamsToJson(value: EventVisitorItemCounterStaticParams): any {
         return uncast(value, r("EventVisitorItemCounterStaticParams"));
+    }
+
+    public static toPlacementRemove(json: any): PlacementRemove {
+        return cast(json, r("PlacementRemove"));
+    }
+
+    public static placementRemoveToJson(value: PlacementRemove): any {
+        return uncast(value, r("PlacementRemove"));
+    }
+
+    public static toPlacementStatisticsJSONReady(json: any): PlacementStatisticsJSONReady {
+        return cast(json, r("PlacementStatisticsJSONReady"));
+    }
+
+    public static placementStatisticsJSONReadyToJson(value: PlacementStatisticsJSONReady): any {
+        return uncast(value, r("PlacementStatisticsJSONReady"));
+    }
+
+    public static toLIFOVecForUint128(json: any): LIFOVecForUint128 {
+        return cast(json, r("LIFOVecForUint128"));
+    }
+
+    public static lIFOVecForUint128ToJson(value: LIFOVecForUint128): any {
+        return uncast(value, r("LIFOVecForUint128"));
+    }
+
+    public static toSuccessTries(json: any): SuccessTries {
+        return cast(json, r("SuccessTries"));
+    }
+
+    public static successTriesToJson(value: SuccessTries): any {
+        return uncast(value, r("SuccessTries"));
     }
 
     public static toPlacementUpsert(json: any): PlacementUpsert {
@@ -1607,6 +1747,14 @@ export class Convert {
         return uncast(value, r("PlacementUpsert"));
     }
 
+    public static toAttributeFilter(json: any): AttributeFilter {
+        return cast(json, r("AttributeFilter"));
+    }
+
+    public static attributeFilterToJson(value: AttributeFilter): any {
+        return uncast(value, r("AttributeFilter"));
+    }
+
     public static toWeightedGenericCandidateRec(json: any): WeightedGenericCandidateRec {
         return cast(json, r("WeightedGenericCandidateRec"));
     }
@@ -1615,12 +1763,12 @@ export class Convert {
         return uncast(value, r("WeightedGenericCandidateRec"));
     }
 
-    public static toStrategyDynamicStrategies(json: any): StrategyDynamicStrategies {
-        return cast(json, r("StrategyDynamicStrategies"));
+    public static toURLParam(json: any): URLParam {
+        return cast(json, r("URLParam"));
     }
 
-    public static strategyDynamicStrategiesToJson(value: StrategyDynamicStrategies): any {
-        return uncast(value, r("StrategyDynamicStrategies"));
+    public static uRLParamToJson(value: URLParam): any {
+        return uncast(value, r("URLParam"));
     }
 
     public static toPurchaseComplete(json: any): PurchaseComplete {
@@ -1653,14 +1801,6 @@ export class Convert {
 
     public static itemDetailsRecoShowToJson(value: ItemDetailsRecoShow): any {
         return uncast(value, r("ItemDetailsRecoShow"));
-    }
-
-    public static toStrategiesUsedDynamicStrategies(json: any): StrategiesUsedDynamicStrategies {
-        return cast(json, r("StrategiesUsedDynamicStrategies"));
-    }
-
-    public static strategiesUsedDynamicStrategiesToJson(value: StrategiesUsedDynamicStrategies): any {
-        return uncast(value, r("StrategiesUsedDynamicStrategies"));
     }
 
     public static toPlacementConfig(json: any): PlacementConfig {
@@ -1703,6 +1843,14 @@ export class Convert {
         return uncast(value, r("SearchInfo"));
     }
 
+    public static toRecoClick(json: any): RecoClick {
+        return cast(json, r("RecoClick"));
+    }
+
+    public static recoClickToJson(value: RecoClick): any {
+        return uncast(value, r("RecoClick"));
+    }
+
     public static toRecoRequest(json: any): RecoRequest {
         return cast(json, r("RecoRequest"));
     }
@@ -1733,6 +1881,30 @@ export class Convert {
 
     public static removeFromListToJson(value: RemoveFromList): any {
         return uncast(value, r("RemoveFromList"));
+    }
+
+    public static toRescoreRequest(json: any): RescoreRequest {
+        return cast(json, r("RescoreRequest"));
+    }
+
+    public static rescoreRequestToJson(value: RescoreRequest): any {
+        return uncast(value, r("RescoreRequest"));
+    }
+
+    public static toRescoreResponse(json: any): RescoreResponse {
+        return cast(json, r("RescoreResponse"));
+    }
+
+    public static rescoreResponseToJson(value: RescoreResponse): any {
+        return uncast(value, r("RescoreResponse"));
+    }
+
+    public static toRescoredEntry(json: any): RescoredEntry {
+        return cast(json, r("RescoredEntry"));
+    }
+
+    public static rescoredEntryToJson(value: RescoredEntry): any {
+        return uncast(value, r("RescoredEntry"));
     }
 
     public static toSearchItems(json: any): SearchItems {
@@ -1783,20 +1955,68 @@ export class Convert {
         return uncast(value, r("StrategyParametersTypes"));
     }
 
-    public static toUnknownEvent(json: any): UnknownEvent {
-        return cast(json, r("UnknownEvent"));
+    public static toStrategyRemove(json: any): StrategyRemove {
+        return cast(json, r("StrategyRemove"));
     }
 
-    public static unknownEventToJson(value: UnknownEvent): any {
-        return uncast(value, r("UnknownEvent"));
+    public static strategyRemoveToJson(value: StrategyRemove): any {
+        return uncast(value, r("StrategyRemove"));
     }
 
-    public static toVideoInteraction(json: any): VideoInteraction {
-        return cast(json, r("VideoInteraction"));
+    public static toStrategyUpsert(json: any): StrategyUpsert {
+        return cast(json, r("StrategyUpsert"));
     }
 
-    public static videoInteractionToJson(value: VideoInteraction): any {
-        return uncast(value, r("VideoInteraction"));
+    public static strategyUpsertToJson(value: StrategyUpsert): any {
+        return uncast(value, r("StrategyUpsert"));
+    }
+
+    public static toStrategy(json: any): Strategy {
+        return cast(json, r("Strategy"));
+    }
+
+    public static strategyToJson(value: Strategy): any {
+        return uncast(value, r("Strategy"));
+    }
+
+    public static toParametrizedStrategy(json: any): ParametrizedStrategy {
+        return cast(json, r("ParametrizedStrategy"));
+    }
+
+    public static parametrizedStrategyToJson(value: ParametrizedStrategy): any {
+        return uncast(value, r("ParametrizedStrategy"));
+    }
+
+    public static toContentItemMatcherObject(json: any): ContentItemMatcherObject {
+        return cast(json, r("ContentItemMatcherObject"));
+    }
+
+    public static contentItemMatcherObjectToJson(value: ContentItemMatcherObject): any {
+        return uncast(value, r("ContentItemMatcherObject"));
+    }
+
+    public static toItemCounterObject(json: any): ItemCounterObject {
+        return cast(json, r("ItemCounterObject"));
+    }
+
+    public static itemCounterObjectToJson(value: ItemCounterObject): any {
+        return uncast(value, r("ItemCounterObject"));
+    }
+
+    public static toOfflineRecommendationsStorageObject(json: any): OfflineRecommendationsStorageObject {
+        return cast(json, r("OfflineRecommendationsStorageObject"));
+    }
+
+    public static offlineRecommendationsStorageObjectToJson(value: OfflineRecommendationsStorageObject): any {
+        return uncast(value, r("OfflineRecommendationsStorageObject"));
+    }
+
+    public static toSessionBasedCooccurenceObject(json: any): SessionBasedCooccurenceObject {
+        return cast(json, r("SessionBasedCooccurenceObject"));
+    }
+
+    public static sessionBasedCooccurenceObjectToJson(value: SessionBasedCooccurenceObject): any {
+        return uncast(value, r("SessionBasedCooccurenceObject"));
     }
 }
 
@@ -1934,18 +2154,19 @@ function r(name: string) {
 
 const typeMap: any = {
     "AddToCart": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("ItemDetails") },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
-    "EventDetail": o([
+    "EventDetails": o([
         { json: "event_attributes", js: "event_attributes", typ: u(undefined, u(m(""), null)) },
         { json: "experiment_ids", js: "experiment_ids", typ: u(undefined, u(0, null)) },
         { json: "rec_id", js: "rec_id", typ: u(undefined, u(null, "")) },
-        { json: "url", js: "url", typ: "" },
+        { json: "url", js: "url", typ: u(undefined, u(null, "")) },
     ], "any"),
     "ItemDetails": o([
         { json: "attributes", js: "attributes", typ: u(undefined, u(null, r("Attributes"))) },
@@ -1955,6 +2176,7 @@ const typeMap: any = {
         { json: "article", js: "article", typ: u(undefined, u(null, r("Article"))) },
         { json: "categories", js: "categories", typ: u(undefined, u(null, r("Categories"))) },
         { json: "costs", js: "costs", typ: u(undefined, u(null, r("Costs"))) },
+        { json: "custom_attributes", js: "custom_attributes", typ: u(undefined, u(null, r("CustomAttributes"))) },
         { json: "description", js: "description", typ: u(undefined, u(null, r("Description"))) },
         { json: "ecommerce", js: "ecommerce", typ: u(undefined, u(null, r("ItemEcommerceSpec"))) },
         { json: "images", js: "images", typ: u(undefined, u(null, r("Images"))) },
@@ -1975,6 +2197,11 @@ const typeMap: any = {
     ], "any"),
     "Costs": o([
         { json: "costs", js: "costs", typ: m(3.14) },
+    ], "any"),
+    "CustomAttributes": o([
+        { json: "boolean", js: "boolean", typ: u(undefined, u(m(true), null)) },
+        { json: "numeric", js: "numeric", typ: u(undefined, u(m(3.14), null)) },
+        { json: "string", js: "string", typ: u(undefined, u(m(""), null)) },
     ], "any"),
     "Description": o([
         { json: "content", js: "content", typ: u(undefined, u(m(""), null, "")) },
@@ -2031,31 +2258,28 @@ const typeMap: any = {
         { json: "gender", js: "gender", typ: u(undefined, u(r("Gender"), null)) },
         { json: "ip", js: "ip", typ: u(undefined, u(null, "")) },
         { json: "location", js: "location", typ: u(undefined, u(null, "")) },
-        { json: "session_id", js: "session_id", typ: u(undefined, u(null, "")) },
         { json: "user_agent", js: "user_agent", typ: u(undefined, u(null, "")) },
     ], "any"),
     "AddToList": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("ItemDetails") },
         { json: "list_id", js: "list_id", typ: "" },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
+    "APIClaimsConfig": o([
+        { json: "duration_hours", js: "duration_hours", typ: u(undefined, u(0, null)) },
+        { json: "event_functions", js: "event_functions", typ: a(r("EventFunction")) },
+    ], "any"),
     "APISettings": o([
         { json: "url_api", js: "url_api", typ: "" },
     ], "any"),
-    "ChangeItemStockState": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
-        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
-        { json: "event_type", js: "event_type", typ: r("EventType") },
-        { json: "item", js: "item", typ: r("Item") },
-        { json: "stock_state", js: "stock_state", typ: r("StockState") },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
-    ], "any"),
     "CheckoutStart": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
@@ -2074,7 +2298,8 @@ const typeMap: any = {
         { json: "state", js: "state", typ: u(undefined, u(3.14, null)) },
     ], "any"),
     "DetailItemView": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("ItemDetails") },
@@ -2084,16 +2309,19 @@ const typeMap: any = {
     ], "any"),
     "DetailItemViewAttributes": o([
         { json: "completed", js: "completed", typ: u(undefined, u(true, null)) },
+        { json: "view_perc", js: "view_perc", typ: u(undefined, u(3.14, null)) },
         { json: "view_time_secs", js: "view_time_secs", typ: u(undefined, u(0, null)) },
     ], "any"),
     "HomePageView": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "ImageInteraction": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("ItemDetails") },
@@ -2116,14 +2344,14 @@ const typeMap: any = {
         { json: "Costs", js: "Costs", typ: u(undefined, r("CostsFieldName")) },
     ], false),
     "ItemRemove": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("Item") },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "ItemsView": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
@@ -2132,14 +2360,14 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "ItemUpsert": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item_details", js: "item_details", typ: r("ItemDetails") },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "ListView": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
@@ -2147,25 +2375,24 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "OfflineRecommendationsRemove": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "name", js: "name", typ: u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum")) },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "OfflineRecommendationsTypeClass": o([
         { json: "OtherSimilarity", js: "OtherSimilarity", typ: "" },
     ], false),
     "OfflineRecommendationsUpsert": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "matrix", js: "matrix", typ: m(m(0)) },
         { json: "name", js: "name", typ: u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum")) },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "OtherInteraction": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "interaction_name", js: "interaction_name", typ: "" },
@@ -2173,92 +2400,100 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "PageVisit": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
-    "PlacementRemove": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
-        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
-        { json: "event_type", js: "event_type", typ: r("EventType") },
-        { json: "name", js: "name", typ: "" },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
-    ], "any"),
-    "PlacementStatisticsJSONReady": o([
-        { json: "loading_times_microseconds", js: "loading_times_microseconds", typ: m(r("LIFOVecForUint128")) },
-        { json: "placements_statistics", js: "placements_statistics", typ: m(a(a(u(r("StrategyEnum"), r("DynamicStrategiesObject"))))) },
-    ], "any"),
-    "LIFOVecForUint128": o([
-        { json: "base", js: "base", typ: a(0) },
-        { json: "capacity", js: "capacity", typ: 0 },
-    ], "any"),
-    "DynamicStrategiesObject": o([
-        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
-        { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
-        { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
-        { json: "n_impressions", js: "n_impressions", typ: u(undefined, 0) },
-        { json: "n_success", js: "n_success", typ: u(undefined, 0) },
-    ], "any"),
-    "ParametrizedStrategy": o([
-        { json: "VisitorItemCounter", js: "VisitorItemCounter", typ: u(undefined, r("EventVisitorItemCounterStaticParams")) },
-        { json: "ItemCounter", js: "ItemCounter", typ: u(undefined, r("EventTypeItemCounterStaticParams")) },
-        { json: "ItemCooccurences", js: "ItemCooccurences", typ: u(undefined, r("EventItemTypeItemCooccurenceStaticParams")) },
-        { json: "ContentItemMatcher", js: "ContentItemMatcher", typ: u(undefined, r("ContentItemMatcherStaticParams")) },
-        { json: "OfflineRecommendationsStorage", js: "OfflineRecommendationsStorage", typ: u(undefined, r("OfflineRecommendationsStorageStaticParams")) },
-        { json: "SessionBasedCooccurence", js: "SessionBasedCooccurence", typ: u(undefined, r("SessionItemsCooccurenceStaticParams")) },
-    ], false),
     "ContentItemMatcherStaticParams": o([
         { json: "item_type", js: "item_type", typ: u(undefined, u(r("ItemType"), null)) },
     ], "any"),
     "EventItemTypeItemCooccurenceStaticParams": o([
-        { json: "event_type_a", js: "event_type_a", typ: r("EventType") },
-        { json: "event_type_b", js: "event_type_b", typ: r("EventType") },
+        { json: "event_filter_a", js: "event_filter_a", typ: r("EventFilter") },
+        { json: "event_filter_b", js: "event_filter_b", typ: r("EventFilter") },
         { json: "item_type_a", js: "item_type_a", typ: r("ItemType") },
         { json: "item_type_b", js: "item_type_b", typ: r("ItemType") },
     ], "any"),
-    "EventTypeItemCounterStaticParams": o([
+    "EventFilter": o([
+        { json: "condition", js: "condition", typ: u(undefined, u(null, "")) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
+    ], "any"),
+    "EventTypeItemCounterStaticParams": o([
+        { json: "event_filter", js: "event_filter", typ: r("EventFilter") },
         { json: "item_type", js: "item_type", typ: r("ItemType") },
     ], "any"),
     "OfflineRecommendationsStorageStaticParams": o([
         { json: "rec_type", js: "rec_type", typ: u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum")) },
     ], "any"),
     "SessionItemsCooccurenceStaticParams": o([
-        { json: "cooccurence", js: "cooccurence", typ: r("EventItemTypeItemCooccurenceStaticParams") },
-        { json: "item_generator", js: "item_generator", typ: r("EventVisitorItemCounterStaticParams") },
+        { json: "cooccurence", js: "cooccurence", typ: r("CooccurenceObject") },
+        { json: "item_generator", js: "item_generator", typ: r("ItemGeneratorObject") },
     ], "any"),
-    "EventVisitorItemCounterStaticParams": o([
-        { json: "event_type", js: "event_type", typ: r("EventType") },
+    "CooccurenceObject": o([
+        { json: "event_filter_a", js: "event_filter_a", typ: r("EventFilter") },
+        { json: "event_filter_b", js: "event_filter_b", typ: r("EventFilter") },
+        { json: "item_type_a", js: "item_type_a", typ: r("ItemType") },
+        { json: "item_type_b", js: "item_type_b", typ: r("ItemType") },
+    ], "any"),
+    "ItemGeneratorObject": o([
+        { json: "event_filter", js: "event_filter", typ: r("EventFilter") },
         { json: "item_type", js: "item_type", typ: r("ItemType") },
         { json: "user_info_type", js: "user_info_type", typ: r("UserInfoType") },
     ], "any"),
-    "PlacementUpsert": o([
-        { json: "enabled", js: "enabled", typ: u(undefined, true) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+    "EventVisitorItemCounterStaticParams": o([
+        { json: "event_filter", js: "event_filter", typ: r("EventFilter") },
+        { json: "item_type", js: "item_type", typ: r("ItemType") },
+        { json: "user_info_type", js: "user_info_type", typ: r("UserInfoType") },
+    ], "any"),
+    "PlacementRemove": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "name", js: "name", typ: "" },
+    ], "any"),
+    "PlacementStatisticsJSONReady": o([
+        { json: "loading_times_microseconds", js: "loading_times_microseconds", typ: m(r("LIFOVecForUint128")) },
+        { json: "placements_statistics", js: "placements_statistics", typ: m(a(a(u(r("SuccessTries"), "")))) },
+    ], "any"),
+    "LIFOVecForUint128": o([
+        { json: "base", js: "base", typ: a(0) },
+        { json: "capacity", js: "capacity", typ: 0 },
+    ], "any"),
+    "SuccessTries": o([
+        { json: "n_impressions", js: "n_impressions", typ: 0 },
+        { json: "n_success", js: "n_success", typ: 0 },
+    ], "any"),
+    "PlacementUpsert": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "enabled", js: "enabled", typ: u(undefined, true) },
+        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
+        { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "filter", js: "filter", typ: u(undefined, u(null, r("AttributeFilter"))) },
         { json: "html_template", js: "html_template", typ: u(undefined, u(null, "")) },
         { json: "item_type", js: "item_type", typ: r("ItemType") },
         { json: "location", js: "location", typ: u(undefined, u(r("Location"), null)) },
         { json: "name", js: "name", typ: "" },
         { json: "ranking", js: "ranking", typ: r("StrategySelectorStrategyChooseOne") },
         { json: "strategies", js: "strategies", typ: a(r("WeightedGenericCandidateRec")) },
-        { json: "url_params", js: "url_params", typ: u(undefined, u(m(""), null)) },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
+        { json: "url_params", js: "url_params", typ: u(undefined, u(a(r("URLParam")), null)) },
+    ], "any"),
+    "AttributeFilter": o([
+        { json: "expr", js: "expr", typ: "" },
+        { json: "typ", js: "typ", typ: r("FilterType") },
     ], "any"),
     "WeightedGenericCandidateRec": o([
-        { json: "strategy", js: "strategy", typ: u(r("StrategyDynamicStrategies"), r("StrategyEnum")) },
+        { json: "strategy_name", js: "strategy_name", typ: "" },
         { json: "weight", js: "weight", typ: u(undefined, u(3.14, null)) },
     ], "any"),
-    "StrategyDynamicStrategies": o([
-        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
-        { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
-        { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
-    ], false),
+    "URLParam": o([
+        { json: "name", js: "name", typ: "" },
+        { json: "value", js: "value", typ: "" },
+    ], "any"),
     "PurchaseComplete": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
@@ -2266,8 +2501,9 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "RateItem": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "comment", js: "comment", typ: u(undefined, u(null, "")) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("ItemDetails") },
@@ -2275,7 +2511,8 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "RecoACK": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetailsRecoShow")) },
@@ -2287,14 +2524,9 @@ const typeMap: any = {
         { json: "item", js: "item", typ: r("Item") },
         { json: "rec_id", js: "rec_id", typ: "" },
         { json: "score", js: "score", typ: u(undefined, u(3.14, null)) },
-        { json: "strategies_used", js: "strategies_used", typ: u(undefined, u(a(a(u(r("StrategiesUsedDynamicStrategies"), 3.14, r("StrategyEnum")))), null)) },
-        { json: "strategy_selected", js: "strategy_selected", typ: u(r("StrategyDynamicStrategies"), r("StrategyEnum")) },
+        { json: "strategies_used", js: "strategies_used", typ: u(undefined, u(a(a(u(3.14, ""))), null)) },
+        { json: "strategy_selected", js: "strategy_selected", typ: u(undefined, u(null, "")) },
     ], "any"),
-    "StrategiesUsedDynamicStrategies": o([
-        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
-        { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
-        { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
-    ], false),
     "PlacementConfig": o([
         { json: "html_template", js: "html_template", typ: u(undefined, u(null, "")) },
         { json: "item_attributes_selection", js: "item_attributes_selection", typ: u(undefined, u(r("ItemAttributesSelectionItemAttributesSelectionClass"), r("ItemAttributesSelectionEnum"), null)) },
@@ -2324,9 +2556,17 @@ const typeMap: any = {
     "SearchInfo": o([
         { json: "query", js: "query", typ: u(undefined, u(null, "")) },
     ], "any"),
+    "RecoClick": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
+        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
+        { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "user_info", js: "user_info", typ: r("UserInfo") },
+    ], "any"),
     "RecoRequest": o([
         { json: "additional_uri_params", js: "additional_uri_params", typ: u(undefined, u(m(""), null)) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "locale", js: "locale", typ: u(undefined, u(r("Locale"), null)) },
@@ -2337,7 +2577,8 @@ const typeMap: any = {
     ], "any"),
     "RecoShow": o([
         { json: "additional_uri_params", js: "additional_uri_params", typ: u(undefined, u(m(""), null)) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "experiment_id", js: "experiment_id", typ: u(undefined, u(null, "")) },
@@ -2346,23 +2587,52 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "RemoveFromCart": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "item", js: "item", typ: r("ItemDetails") },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "RemoveFromList": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
         { json: "list_id", js: "list_id", typ: u(undefined, u(null, "")) },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
+    "RescoreRequest": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
+        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
+        { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "items", js: "items", typ: a(r("Item")) },
+        { json: "placement_config", js: "placement_config", typ: r("PlacementConfig") },
+        { json: "user_info", js: "user_info", typ: r("UserInfo") },
+    ], "any"),
+    "RescoreResponse": o([
+        { json: "additional_uri_params", js: "additional_uri_params", typ: u(undefined, u(m(""), null)) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
+        { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
+        { json: "event_type", js: "event_type", typ: r("EventType") },
+        { json: "experiment_id", js: "experiment_id", typ: u(undefined, u(null, "")) },
+        { json: "items", js: "items", typ: a(r("RescoredEntry")) },
+        { json: "placement_config", js: "placement_config", typ: r("PlacementConfig") },
+        { json: "user_info", js: "user_info", typ: r("UserInfo") },
+    ], "any"),
+    "RescoredEntry": o([
+        { json: "item", js: "item", typ: r("Item") },
+        { json: "rec_id", js: "rec_id", typ: "" },
+        { json: "score", js: "score", typ: 3.14 },
+        { json: "strategy_selected", js: "strategy_selected", typ: u(undefined, u(null, "")) },
+    ], "any"),
     "SearchItems": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
@@ -2370,15 +2640,17 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "CartPageView": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "cart_id", js: "cart_id", typ: u(undefined, u(null, "")) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetails")) },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "SmartSearchRequest": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "filter", js: "filter", typ: m("") },
@@ -2389,14 +2661,16 @@ const typeMap: any = {
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "SmartSearchShow": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "items", js: "items", typ: a(r("ItemDetailsRecoShow")) },
         { json: "user_info", js: "user_info", typ: r("UserInfo") },
     ], "any"),
     "SortItems": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
+        { json: "event_details", js: "event_details", typ: u(undefined, u(null, r("EventDetails"))) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
         { json: "sort_order", js: "sort_order", typ: u(undefined, u(r("SortOrder"), null)) },
@@ -2412,27 +2686,50 @@ const typeMap: any = {
         { json: "page_info", js: "page_info", typ: true },
         { json: "search_info", js: "search_info", typ: true },
     ], "any"),
-    "UnknownEvent": o([
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+    "StrategyRemove": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
+        { json: "name", js: "name", typ: "" },
     ], "any"),
-    "VideoInteraction": o([
-        { json: "completed", js: "completed", typ: u(undefined, u(true, null)) },
-        { json: "event_detail", js: "event_detail", typ: u(undefined, u(null, r("EventDetail"))) },
+    "StrategyUpsert": o([
+        { json: "api_token", js: "api_token", typ: u(undefined, u(null, "")) },
         { json: "event_time", js: "event_time", typ: u(undefined, u(0, null)) },
         { json: "event_type", js: "event_type", typ: r("EventType") },
-        { json: "items", js: "items", typ: a(r("ItemDetails")) },
-        { json: "user_info", js: "user_info", typ: r("UserInfo") },
-        { json: "video_item", js: "video_item", typ: u(undefined, u(null, r("Item"))) },
-        { json: "watched_secs", js: "watched_secs", typ: u(undefined, u(0, null)) },
+        { json: "name", js: "name", typ: "" },
+        { json: "strategy", js: "strategy", typ: r("Strategy") },
+    ], "any"),
+    "Strategy": o([
+        { json: "Parametrized", js: "Parametrized", typ: u(undefined, r("ParametrizedStrategy")) },
+        { json: "Generic", js: "Generic", typ: u(undefined, r("GenericStrategy")) },
+        { json: "StrategyBuilder", js: "StrategyBuilder", typ: u(undefined, "") },
+    ], false),
+    "ParametrizedStrategy": o([
+        { json: "VisitorItemCounter", js: "VisitorItemCounter", typ: u(undefined, r("ItemGeneratorObject")) },
+        { json: "ItemCounter", js: "ItemCounter", typ: u(undefined, r("ItemCounterObject")) },
+        { json: "ItemCooccurences", js: "ItemCooccurences", typ: u(undefined, r("CooccurenceObject")) },
+        { json: "ContentItemMatcher", js: "ContentItemMatcher", typ: u(undefined, r("ContentItemMatcherObject")) },
+        { json: "OfflineRecommendationsStorage", js: "OfflineRecommendationsStorage", typ: u(undefined, r("OfflineRecommendationsStorageObject")) },
+        { json: "SessionBasedCooccurence", js: "SessionBasedCooccurence", typ: u(undefined, r("SessionBasedCooccurenceObject")) },
+    ], false),
+    "ContentItemMatcherObject": o([
+        { json: "item_type", js: "item_type", typ: u(undefined, u(r("ItemType"), null)) },
+    ], "any"),
+    "ItemCounterObject": o([
+        { json: "event_filter", js: "event_filter", typ: r("EventFilter") },
+        { json: "item_type", js: "item_type", typ: r("ItemType") },
+    ], "any"),
+    "OfflineRecommendationsStorageObject": o([
+        { json: "rec_type", js: "rec_type", typ: u(r("OfflineRecommendationsTypeClass"), r("OfflineRecommendationsTypeEnum")) },
+    ], "any"),
+    "SessionBasedCooccurenceObject": o([
+        { json: "cooccurence", js: "cooccurence", typ: r("CooccurenceObject") },
+        { json: "item_generator", js: "item_generator", typ: r("ItemGeneratorObject") },
     ], "any"),
     "EventType": [
         "AddToCart",
         "AddToList",
         "CartPageView",
-        "ChangeItemStockState",
         "CheckoutStart",
         "DetailItemView",
         "HomePageView",
@@ -2450,16 +2747,19 @@ const typeMap: any = {
         "PurchaseComplete",
         "RateItem",
         "RecoAck",
+        "RecoClick",
         "RecoRequest",
         "RecoShow",
         "RemoveFromCart",
         "RemoveFromList",
+        "RescoreRequest",
+        "RescoreResponse",
         "SearchItems",
         "SmartSearchRequest",
         "SmartSearchShow",
         "SortItems",
-        "UnknownEvent",
-        "VideoInteraction",
+        "StrategyRemove",
+        "StrategyUpsert",
     ],
     "Currency": [
         "AMD",
@@ -2653,6 +2953,12 @@ const typeMap: any = {
         "NonPersonalized",
         "Personalized",
     ],
+    "EventFunction": [
+        "Config",
+        "Reco",
+        "Search",
+        "User",
+    ],
     "BuilderFn1": [
         "ArgMax",
         "ArgMin",
@@ -2738,19 +3044,14 @@ const typeMap: any = {
         "ImageSimilarity",
         "TextSimilarity",
     ],
-    "StrategyEnum": [
-        "Unknown",
-    ],
-    "GenericStrategy": [
-        "BestsellerCategory",
-        "SearchMatching",
-        "SeenInSessionCoccurAddedToCart",
-        "SeenInSessionCoccurSeen",
-    ],
     "UserInfoType": [
-        "SESSION",
-        "USER",
-        "VISITOR",
+        "Session",
+        "User",
+        "Visitor",
+    ],
+    "FilterType": [
+        "Exclude",
+        "Include",
     ],
     "Location": [
         "AddToCart",
@@ -2895,5 +3196,11 @@ const typeMap: any = {
         "PriceDesc",
         "RatingAsc",
         "RatingDesc",
+    ],
+    "GenericStrategy": [
+        "BestsellerCategory",
+        "SearchMatching",
+        "SeenInSessionCoccurAddedToCart",
+        "SeenInSessionCoccurSeen",
     ],
 };
